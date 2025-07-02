@@ -6,6 +6,8 @@ namespace single_pose_optimizer {
 
 class LossFunction {
  public:
+  LossFunction() {}
+
   virtual ~LossFunction() {}
 
   virtual void Evaluate(const double& squared_residual, double output[3]) = 0;

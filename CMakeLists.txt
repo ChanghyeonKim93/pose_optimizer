@@ -48,5 +48,3 @@ install(
   FILES_MATCHING
   PATTERN "*.h"
 )
-
-add_subdirectory(tests)

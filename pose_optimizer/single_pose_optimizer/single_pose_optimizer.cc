@@ -77,6 +77,7 @@ bool SinglePoseOptimizer<kDimPose>::Solve(const Problem<kDimPose>& problem,
     step_summary.cost_change = cost - previous_cost;
     step_summary.gradient_norm = gradient.norm();
     step_summary.step_norm = update_step.norm();
+    step_summary.status = StepSummary::Status::UPDATE;
     // step_summary.step_size;
     // step_summary.step_solver_time_in_seconds;
     // step_summary.trust_region_radius;
@@ -116,14 +117,16 @@ bool SinglePoseOptimizer<kDimPose>::Solve(const Problem<kDimPose>& problem,
 template <int kDimPose>
 void SinglePoseOptimizer<kDimPose>::AddLocalHessianOnlyUpperTriangle(
     const HessianMatrix& local_hessian, HessianMatrix* hessian) {
-  for (int i = 0; i < kDimPose; ++i)
-    for (int j = i; j < kDimPose; ++j) (*hessian)(i, j) += local_hessian(i, j);
+  for (int i = 0; i < kDimPoseParam; ++i)
+    for (int j = i; j < kDimPoseParam; ++j)
+      (*hessian)(i, j) += local_hessian(i, j);
 }
 
 template <int kDimPose>
 void SinglePoseOptimizer<kDimPose>::ReflectHessian(HessianMatrix* hessian) {
-  for (int i = 0; i < kDimPose; ++i)
-    for (int j = i + 1; j < kDimPose; ++j) (*hessian)(j, i) = (*hessian)(i, j);
+  for (int i = 0; i < kDimPoseParam; ++i)
+    for (int j = i + 1; j < kDimPoseParam; ++j)
+      (*hessian)(j, i) = (*hessian)(i, j);
 };
 
 template class SinglePoseOptimizer<2>;

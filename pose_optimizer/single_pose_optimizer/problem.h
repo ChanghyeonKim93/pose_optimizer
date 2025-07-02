@@ -11,9 +11,6 @@ namespace single_pose_optimizer {
 template <int kDimPose>
 class Problem {
  protected:
-  static const int kDimTranslation = kDimPose;
-  static const int kDimRotation = kDimPose;
-  static const int kDimPoseParam = kDimPose == 2 ? 3 : 6;
   using CostFunctionPtr = std::shared_ptr<CostFunction<kDimPose>>;
   using LossFunctionPtr = std::shared_ptr<LossFunction>;
   using ResidualBlockPtr = std::shared_ptr<ResidualBlock<kDimPose>>;
@@ -21,10 +18,10 @@ class Problem {
  public:
   Problem() {}
 
-  void AddResidualBlock(CostFunctionPtr* cost_function,
-                        LossFunctionPtr* loss_function = nullptr) {
+  void AddResidualBlock(const CostFunctionPtr& cost_function,
+                        const LossFunctionPtr& loss_function) {
     ResidualBlockPtr residual_block =
-        std::make_shared<ResidualBlock>(cost_function, loss_function);
+        std::make_shared<ResidualBlock<kDimPose>>(cost_function, loss_function);
     residual_block_set_.insert(residual_block);
   }
 

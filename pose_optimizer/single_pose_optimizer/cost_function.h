@@ -18,6 +18,8 @@ class CostFunction {
   using GradientVector = Eigen::Matrix<double, kDimPoseParam, 1>;
 
  public:
+  CostFunction() {}
+
   virtual ~CostFunction() {}
 
   virtual bool Evaluate(const RotationMatrix& rotation_matrix,

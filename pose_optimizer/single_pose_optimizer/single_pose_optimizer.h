@@ -25,6 +25,8 @@ class SinglePoseOptimizer {
   using Pose = Eigen::Transform<double, kDimPose, 1>;
   using HessianMatrix = Eigen::Matrix<double, kDimPoseParam, kDimPoseParam>;
   using GradientVector = Eigen::Matrix<double, kDimPoseParam, 1>;
+  static_assert(kDimPose == 2 || kDimPose == 3,
+                "SinglePoseOptimizer only supports 2D and 3D poses.");
 
  public:
   SinglePoseOptimizer();
