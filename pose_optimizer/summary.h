@@ -1,33 +1,37 @@
-#ifndef POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_SUMMARY_H_
-#define POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_SUMMARY_H_
+#ifndef POSE_OPTIMIZER_SUMMARY_H_
+#define POSE_OPTIMIZER_SUMMARY_H_
 
 #include <string>
 #include <vector>
 
 namespace pose_optimizer {
 
-enum class SolverType {
-  LEVENBERG_MARQUARDT = 0,
-  GRADIENT_DESCENT = 1,
-  GAUSS_NEWTON = 2
+struct OverallSummary {
+  int num_residual_blocks{-1};
+  int num_parameter_blocks{-1};
+  int max_iterations{-1};
+  bool is_converged{true};
 };
 
-enum class IterationStatus {
-  UNDEFINED = -1,
-  UPDATE = 0,
-  UPDATE_TRUST_MORE = 1,
-  SKIPPED = 2
-};
+struct StepSummary {
+  enum class Status {
+    UNDEFINED = -1,
+    UPDATE = 0,
+    UPDATE_TRUST_MORE = 1,
+    SKIPPED = 2
+  };
 
-struct OptimizationInfo {
-  double cost{-1.0};
-  double cost_change{-1.0};
-  double average_reprojection_error{-1.0};
-  double abs_gradient{-1.0};
-  double abs_step{-1.0};
-  double damping_term{-1.0};
-  double iter_time{-1.0};
-  IterationStatus iteration_status{IterationStatus::UNDEFINED};
+  int iteration{-1};
+  double iteration_time_in_seconds{0.0};
+  double cumulative_time_in_seconds{0.0};
+  double step_solver_time_in_seconds{0.0};
+  double cost{0.0};
+  double cost_change{0.0};
+  double gradient_norm{0.0};
+  double step_norm{0.0};
+  double step_size{0.0};
+  double trust_region_radius{0.0};
+  Status status{Status::UNDEFINED};
 };
 
 class Summary {
@@ -36,23 +40,21 @@ class Summary {
 
   ~Summary();
 
-  std::string BriefReport();
+  std::string GetBriefReport() const;
 
-  std::string FullReport();
+  double GetTotalTimeInSeconds() const;
 
-  const double GetTotalTimeInSecond() const;
+  void SetStepSummary(const StepSummary& step_summary);
 
-  void AddOptimizationInfo(const OptimizationInfo& optimization_info) {
-    optimization_infos_.push_back(optimization_info);
-  }
+  void SetOverallSummary(const OverallSummary& overall_summary);
 
- protected:
-  std::vector<OptimizationInfo> optimization_infos_;
-  int max_iteration_;
-  double total_time_in_millisecond_;
-  bool convergence_status_;
+ private:
+  bool is_step_summary_set_{false};
+  bool is_overall_summary_set_{false};
+  std::vector<StepSummary> step_summary_list_;
+  OverallSummary overall_summary_;
 };
 
 }  // namespace pose_optimizer
 
-#endif  // POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_SUMMARY_H_
+#endif  // POSE_OPTIMIZER_SUMMARY_H_

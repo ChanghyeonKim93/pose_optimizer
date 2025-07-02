@@ -26,6 +26,8 @@ include_directories(${EIGEN3_INCLUDE_DIRS})
 
 add_library(
   ${PROJECT_NAME} SHARED 
+  pose_optimizer/time_monitor.cc
+  pose_optimizer/summary.cc
   pose_optimizer/single_pose_optimizer/single_pose_optimizer.cc
 )
 target_include_directories(
@@ -46,3 +48,5 @@ install(
   FILES_MATCHING
   PATTERN "*.h"
 )
+
+add_subdirectory(tests)

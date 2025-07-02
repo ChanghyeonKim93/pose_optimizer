@@ -16,24 +16,31 @@
 namespace pose_optimizer {
 namespace single_pose_optimizer {
 
-template <int kDimTranslation, int kDimRotation>
+template <int kDimPose>
 class SinglePoseOptimizer {
-  static constexpr int kDimPose = kDimTranslation + kDimRotation;
-  using HessianMatrix = Eigen::Matrix<double, kDimPose, kDimPose>;
-  using GradientVector = Eigen::Matrix<double, kDimPose, 1>;
-  using Pose = Eigen::Transform<double, kDimTranslation, 1>;
+  static const int kDimTranslation = kDimPose;
+  static const int kDimRotation = kDimPose;
+  static const int kDimRotationParam = kDimPose == 2 ? 1 : 3;
+  static const int kDimPoseParam = kDimPose == 2 ? 3 : 6;
+  using Pose = Eigen::Transform<double, kDimPose, 1>;
+  using HessianMatrix = Eigen::Matrix<double, kDimPoseParam, kDimPoseParam>;
+  using GradientVector = Eigen::Matrix<double, kDimPoseParam, 1>;
 
  public:
   SinglePoseOptimizer();
 
-  bool Solve(const Problem<kDimTranslation, kDimRotation>& problem,
-             const Options& options, Pose* pose, Summary* summary = nullptr);
+  bool Solve(const Problem<kDimPose>& problem, const Options& options,
+             Pose* pose, Summary* summary = nullptr);
 
  private:
   void AddLocalHessianOnlyUpperTriangle(const HessianMatrix& local_hessian,
                                         HessianMatrix* hessian);
   void ReflectHessian(HessianMatrix* hessian);
 };
+
+// 명시적 인스턴스화를 선언
+extern template class SinglePoseOptimizer<2>;
+extern template class SinglePoseOptimizer<3>;
 
 }  // namespace single_pose_optimizer
 }  // namespace pose_optimizer

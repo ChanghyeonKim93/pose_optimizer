@@ -3,6 +3,12 @@
 
 namespace pose_optimizer {
 
+enum class SolverType {
+  LEVENBERG_MARQUARDT = 0
+  // GRADIENT_DESCENT = 1,
+  // GAUSS_NEWTON = 2
+};
+
 struct Options {
   int max_iterations = 100;
   struct {
@@ -21,6 +27,7 @@ struct Options {
     double lambda_increasing_factor = 2.0;
     double lambda_decreasing_factor = 0.6;
   } damping_handle;
+  SolverType solver_type = SolverType::LEVENBERG_MARQUARDT;
 };
 
 }  // namespace pose_optimizer

@@ -6,14 +6,16 @@
 namespace pose_optimizer {
 namespace single_pose_optimizer {
 
-template <int kDimTranslation, int kDimRotation>
+template <int kDimPose>
 class CostFunction {
  protected:
-  static constexpr int kDimPose = kDimTranslation + kDimRotation;
+  static const int kDimTranslation = kDimPose;
+  static const int kDimRotation = kDimPose;
+  static const int kDimPoseParam = kDimPose == 2 ? 3 : 6;
   using RotationMatrix = Eigen::Matrix<double, kDimRotation, kDimRotation>;
   using TranslationVector = Eigen::Matrix<double, kDimTranslation, 1>;
-  using HessianMatrix = Eigen::Matrix<double, kDimPose, kDimPose>;
-  using GradientVector = Eigen::Matrix<double, kDimPose, 1>;
+  using HessianMatrix = Eigen::Matrix<double, kDimPoseParam, kDimPoseParam>;
+  using GradientVector = Eigen::Matrix<double, kDimPoseParam, 1>;
 
  public:
   virtual ~CostFunction() {}
@@ -27,6 +29,8 @@ class CostFunction {
 
   int GetDimPose() const { return kDimPose; }
 
+  int GetDimPoseParameter() const { return kDimPoseParam; }
+
   int GetDimTranslation() const { return kDimTranslation; }
 
   int GetDimRotation() const { return kDimRotation; }
@@ -38,8 +42,8 @@ class CostFunction {
   int dim_residual_{-1};
 };
 
-template <int kDimResidual, int kDimTranslation, int kDimRotation>
-class SizedCostFunction : public CostFunction<kDimTranslation, kDimRotation> {
+template <int kDimResidual, int kDimPose>
+class SizedCostFunction : public CostFunction<kDimPose> {
  public:
   SizedCostFunction() { this->SetDimResidual(kDimResidual); }
 

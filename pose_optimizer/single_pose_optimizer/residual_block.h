@@ -8,17 +8,19 @@
 namespace pose_optimizer {
 namespace single_pose_optimizer {
 
-template <int kDimTranslation, int kDimRotation>
+template <int kDimPose>
 class ResidualBlock {
  protected:
-  static constexpr int kDimPose = kDimTranslation + kDimRotation;
+  static const int kDimTranslation = kDimPose;
+  static const int kDimRotation = kDimPose;
+  static const int kDimPoseParam = kDimPose == 2 ? 3 : 6;
   using RotationMatrix = Eigen::Matrix<double, kDimRotation, kDimRotation>;
   using TranslationVector = Eigen::Matrix<double, kDimTranslation, 1>;
-  using HessianMatrix = Eigen::Matrix<double, kDimPose, kDimPose>;
-  using GradientVector = Eigen::Matrix<double, kDimPose, 1>;
+  using HessianMatrix = Eigen::Matrix<double, kDimPoseParam, kDimPoseParam>;
+  using GradientVector = Eigen::Matrix<double, kDimPoseParam, 1>;
 
  public:
-  ResidualBlock(CostFunction<kDimTranslation, kDimRotation>* cost_function,
+  ResidualBlock(CostFunction<kDimPose>* cost_function,
                 LossFunction* loss_function = nullptr)
       : cost_function_(cost_function), loss_function_(loss_function) {}
 
@@ -43,7 +45,8 @@ class ResidualBlock {
     local_gradient_ptr->setZero();
     ComputeUpperTriangularHessian(jacobian.data(), dim_residual,
                                   local_hessian_ptr);
-    const double squared_residual = ComputeSquaredResidual(residual.data());
+    const double squared_residual =
+        ComputeSquaredResidual(residual.data(), dim_residual);
     if (loss_function_) {
       *cost = squared_residual;
     } else {
@@ -86,9 +89,12 @@ class ResidualBlock {
     return squared_residual;
   }
 
-  CostFunction<kDimTranslation, kDimRotation>* cost_function_{nullptr};
+  CostFunction<kDimPose>* cost_function_{nullptr};
   LossFunction* loss_function_{nullptr};
 };
+
+extern template class ResidualBlock<3>;
+extern template class ResidualBlock<2>;
 
 }  // namespace single_pose_optimizer
 }  // namespace pose_optimizer

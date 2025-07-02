@@ -5,6 +5,8 @@
 
 namespace pose_optimizer {
 
+double ComputeQuaternion(const double& w) { return w; }
+
 Orientation ComputeQuaternion(const Eigen::Vector3d& w) {
   Orientation orientation{Orientation::Identity()};
   const double theta = w.norm();
@@ -18,6 +20,16 @@ Orientation ComputeQuaternion(const Eigen::Vector3d& w) {
     orientation.vec() = sin_half_theta_divided_theta * w;
   }
   return orientation;
+}
+
+void ApplyDeltaRotation(const Eigen::Matrix<double, 1, 1>& delta_R,
+                        Eigen::Isometry2d* pose) {
+  pose->rotate(delta_R(0));  // 1D 회전 (예: 2D 평면 회전)
+}
+
+void ApplyDeltaRotation(const Eigen::Matrix<double, 3, 1>& delta_R,
+                        Eigen::Isometry3d* pose) {
+  pose->rotate(ComputeQuaternion(delta_R));
 }
 
 }  // namespace pose_optimizer

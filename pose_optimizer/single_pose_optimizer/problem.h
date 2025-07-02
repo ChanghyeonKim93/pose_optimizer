@@ -8,15 +8,15 @@
 namespace pose_optimizer {
 namespace single_pose_optimizer {
 
-template <int kDimTranslation, int kDimRotation>
+template <int kDimPose>
 class Problem {
  protected:
-  static constexpr int kDimPose = kDimTranslation + kDimRotation;
-  using CostFunctionPtr =
-      std::shared_ptr<CostFunction<kDimTranslation, kDimRotation>>;
+  static const int kDimTranslation = kDimPose;
+  static const int kDimRotation = kDimPose;
+  static const int kDimPoseParam = kDimPose == 2 ? 3 : 6;
+  using CostFunctionPtr = std::shared_ptr<CostFunction<kDimPose>>;
   using LossFunctionPtr = std::shared_ptr<LossFunction>;
-  using ResidualBlockPtr =
-      std::shared_ptr<ResidualBlock<kDimTranslation, kDimRotation>>;
+  using ResidualBlockPtr = std::shared_ptr<ResidualBlock<kDimPose>>;
 
  public:
   Problem() {}
