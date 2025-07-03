@@ -7,15 +7,15 @@ endif()
 
 set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2 -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread")
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-  message("-- Detected architecture: x86_64")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -msse -mavx -mavx2")
+  message("-- Detected CPU architecture: x86_64")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mavx2")
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-  message("-- Detected architecture: ARM64 (aarch64)")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -ftree-vectorize -march=armv8-a+simd -mtune=cortex-a72")
+  message("-- Detected CPU architecture: ARM64 (aarch64)")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Ofast -ftree-vectorize")
 else()
-  message("-- Unknown architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+  message("-- Unknown CPU architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
 find_package(Eigen3 REQUIRED)
@@ -29,4 +29,9 @@ add_executable(
 target_link_libraries(
   ${PROJECT_NAME}_test_reprojection_error_minimization 
   pose_optimizer
+)
+
+add_executable(
+  ${PROJECT_NAME}_test_variadic_cost 
+  test_3d_pose_optimization/test_variadic_cost.cc
 )

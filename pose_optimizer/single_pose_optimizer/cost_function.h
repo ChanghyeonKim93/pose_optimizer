@@ -3,6 +3,9 @@
 
 #include "Eigen/Dense"
 
+#include <type_traits>
+#include <utility>
+
 namespace pose_optimizer {
 namespace single_pose_optimizer {
 

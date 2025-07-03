@@ -1,8 +1,8 @@
 #ifndef POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_RESIDUAL_BLOCK_H_
 #define POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_RESIDUAL_BLOCK_H_
 
+#include "pose_optimizer/loss_function.h"
 #include "pose_optimizer/single_pose_optimizer/cost_function.h"
-#include "pose_optimizer/single_pose_optimizer/loss_function.h"
 #include "pose_optimizer/types.h"
 
 #include <iostream>

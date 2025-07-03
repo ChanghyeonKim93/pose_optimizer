@@ -1,8 +1,8 @@
 #ifndef POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_PROBLEM_H_
 #define POSE_OPTIMIZER_SINGLE_POSE_OPTIMIZER_PROBLEM_H_
 
+#include "pose_optimizer/loss_function.h"
 #include "pose_optimizer/single_pose_optimizer/cost_function.h"
-#include "pose_optimizer/single_pose_optimizer/loss_function.h"
 #include "pose_optimizer/single_pose_optimizer/residual_block.h"
 
 namespace pose_optimizer {

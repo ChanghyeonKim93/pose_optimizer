@@ -84,16 +84,15 @@ bool SinglePoseOptimizer<kDimPose>::Solve(const Problem<kDimPose>& problem,
     if (summary != nullptr) summary->SetStepSummary(step_summary);
 
     // Check convergence
-    if (step_summary.step_norm <
-        options.convergence_handle.parameter_tolerance) {
+    const auto& convergence_handle = options.convergence_handle;
+    if (step_summary.step_norm < convergence_handle.parameter_tolerance) {
       break;
     }
-    if (step_summary.gradient_norm <
-        options.convergence_handle.gradient_tolerance) {
+    if (step_summary.gradient_norm < convergence_handle.gradient_tolerance) {
       break;
     }
     if (std::abs(step_summary.cost_change) <
-        options.convergence_handle.function_tolerance) {
+        convergence_handle.function_tolerance) {
       break;
     }
 
